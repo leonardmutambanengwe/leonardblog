@@ -91,27 +91,27 @@ window.onload = wrap_img;
 <p>The dataset is actually made up of multiple datasets, each for a separate city. Using the <strong>CSV Reader</strong> node, all 13 files could be read at once. However, because some of the files had more columns, an option to catch the error had to be relaxed.
 The columns are as below:</p>
 
-<p><a href="https://github.com/leonardmutambanengwe/leonardblog/blob/master/_posts/images/columns.jpg"></a></p>
+<p><img src="/images/knime1/columns.jpg" alt="" /></p>
 
 <p>The last 4, are not in most of the other csv files, and so had to be removed using the <strong>Column Filter</strong> node. Other columns with no valuable information were also removed, as well acolumnss those with over 40% missing values with <strong>Missing Value Column Filter</strong> node.</p>
 
 <p>Column Date was transformed into datetime, using Pandas. Knime can integrate python (and other languages including R and Java). The date was then used to access, using dt, week, month and week information which might be useful in determining price levels. Also the average price was calculated from low and high for the day.</p>
 
-<p><img src="/images/py_script.jpg" alt="" /></p>
+<p><img src="/images/knime1/py_script.jpg" alt="" /></p>
 
 <p>The linear regression is a base line to benchmark the performance. The data was split 70:30 using the <strong>Partitioning</strong> node, and a <strong>Linear Regression Learner</strong> and <strong>Linear Regression Predictor</strong> were used to train and predict on the test set.
 The regression was run on 11 columns.</p>
 
-<p><img src="/images/results1.jpg" alt="" />
+<p><img src="/images/knime1/results1.jpg" alt="" />
 <em>Results of the linear regression, including R-squared for model fit and RMSE for performance.</em></p>
 
 <p>Linear correlation was used to remove corelated features. 2 columns were removed and training and predict done.</p>
 
-<p><img src="/images/results2.jpg" alt="" /></p>
+<p><img src="/images/knime1/results2.jpg" alt="" /></p>
 
 <p>Removing the correlated features resulted in a slight improvement in the RMSE, falling to 41.293 from 42.04.</p>
 
-<p><img src="/images/pumpkins_shot.jpg" alt="" />
+<p><img src="/images/knime1/pumpkins_shot.jpg" alt="" />
 <em>Whole workflow</em></p>
 
 <p>Other ideas to explore:</p>
