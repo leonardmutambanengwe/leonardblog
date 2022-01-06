@@ -8,27 +8,27 @@ KNIME Analytics is a low code platform for analytics, in which visual programmin
 The dataset is actually made up of multiple datasets, each for a separate city. Using the **CSV Reader** node, all 13 files could be read at once. However, because some of the files had more columns, an option to catch the error had to be relaxed.
 The columns are as below:
 
-![below](https://github.com/leonardmutambanengwe/leonardblog/blob/master/_posts/images/columns.jpg) 
+![](/images/knime1/columns.jpg) 
 
-The last 4, are not in most of the other csv files, and so had to be removed using the **Column Filter** node. Other columns with no valuable information were also removed, as well as those with over 40% missing values with **Missing Value Column Filter** node. 
+The last 4, are not in most of the other csv files, and so had to be removed using the **Column Filter** node. Other columns with no valuable information were also removed, as well acolumnss those with over 40% missing values with **Missing Value Column Filter** node. 
 
 Column Date was transformed into datetime, using Pandas. Knime can integrate python (and other languages including R and Java). The date was then used to access, using dt, week, month and week information which might be useful in determining price levels. Also the average price was calculated from low and high for the day. 
 
-![script](https://github.com/leonardmutambanengwe/leonardblog/blob/master/_posts/images/py_script.jpg)
+![](/images/knime1/py_script.jpg)
 
 The linear regression is a base line to benchmark the performance. The data was split 70:30 using the **Partitioning** node, and a **Linear Regression Learner** and **Linear Regression Predictor** were used to train and predict on the test set.
 The regression was run on 11 columns. 
 
-![reg1](https://github.com/leonardmutambanengwe/leonardblog/blob/master/_posts/images/results1.jpg)
+![](/images/knime1/results1.jpg)
 *Results of the linear regression, including R-squared for model fit and RMSE for performance.* 
 
 Linear correlation was used to remove corelated features. 2 columns were removed and training and predict done.
 
-![res2](https://github.com/leonardmutambanengwe/leonardblog/blob/master/_posts/images/results2.jpg)
+![](/images/knime1/results2.jpg)
 
 Removing the correlated features resulted in a slight improvement in the RMSE, falling to 41.293 from 42.04. 
 
-![whole](https://github.com/leonardmutambanengwe/leonardblog/blob/master/_posts/images/pumpkins_shot.jpg)
+![](/images/knime1/pumpkins_shot.jpg)
 *Whole workflow*
 
 Other ideas to explore:
