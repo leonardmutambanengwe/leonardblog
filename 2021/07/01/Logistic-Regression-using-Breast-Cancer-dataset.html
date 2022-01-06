@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>A Logistic Regression model using the Breast Cancer dataset | Leonard Mutambanengwe</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="A Logistic Regression model using the Breast Cancer dataset" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Arthur Danda introduces classification using the popular breast cancer dataset" />
+<meta property="og:description" content="Arthur Danda introduces classification using the popular breast cancer dataset" />
+<link rel="canonical" href="https://leonardmutambanengwe.github.io/leonardblog/2021/07/01/Logistic-Regression-using-Breast-Cancer-dataset.html" />
+<meta property="og:url" content="https://leonardmutambanengwe.github.io/leonardblog/2021/07/01/Logistic-Regression-using-Breast-Cancer-dataset.html" />
+<meta property="og:site_name" content="Leonard Mutambanengwe" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-07-01T00:00:00-05:00" />
+<script type="application/ld+json">
+{"headline":"A Logistic Regression model using the Breast Cancer dataset","url":"https://leonardmutambanengwe.github.io/leonardblog/2021/07/01/Logistic-Regression-using-Breast-Cancer-dataset.html","dateModified":"2021-07-01T00:00:00-05:00","datePublished":"2021-07-01T00:00:00-05:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://leonardmutambanengwe.github.io/leonardblog/2021/07/01/Logistic-Regression-using-Breast-Cancer-dataset.html"},"description":"Arthur Danda introduces classification using the popular breast cancer dataset","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/leonardblog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://leonardmutambanengwe.github.io/leonardblog/feed.xml" title="Leonard Mutambanengwe" /><link rel="shortcut icon" type="image/x-icon" href="/leonardblog/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/leonardblog/">Leonard Mutambanengwe</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/leonardblog/about/">About Me</a><a class="page-link" href="/leonardblog/search/">Search</a><a class="page-link" href="/leonardblog/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">A Logistic Regression model using the Breast Cancer dataset</h1><p class="page-description">Arthur Danda introduces classification using the popular breast cancer dataset</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2021-07-01T00:00:00-05:00" itemprop="datePublished">
+        Jul 1, 2021
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      9 min read
+    
+</span></p>
+
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-wrap flex-justify-end">
+          <div class="px-2">
+
+    <a href="https://github.com/leonardmutambanengwe/leonardblog/tree/master/_notebooks/2021-07-01-Logistic-Regression-using-Breast-Cancer-dataset.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/leonardblog/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://mybinder.org/v2/gh/leonardmutambanengwe/leonardblog/master?filepath=_notebooks%2F2021-07-01-Logistic-Regression-using-Breast-Cancer-dataset.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/leonardblog/assets/badges/binder.svg" alt="Open In Binder"/>
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://colab.research.google.com/github/leonardmutambanengwe/leonardblog/blob/master/_notebooks/2021-07-01-Logistic-Regression-using-Breast-Cancer-dataset.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/leonardblog/assets/badges/colab.svg" alt="Open In Colab"/>
+    </a>
+</div>
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2021-07-01-Logistic-Regression-using-Breast-Cancer-dataset.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Introduction-to-Logistic-Regression">Introduction to Logistic Regression<a class="anchor-link" href="#Introduction-to-Logistic-Regression"> </a></h2><p>Used when we have to choose between 2 values, in this case choosing between malignant and benign. The regression produces an S shape graph assumptions of logistic regression:</p>
+<ul>
+<li>There should not be any multi_collinearity in the model, which means the features must be independent of each other.</li>
+<li>We must include meaningful variables in our model</li>
+<li>We should choose a lage sample size for our logisitic regression</li>
+</ul>
+<p>Solvers -&gt; liblinear =&gt; is for multiclass classifiers</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_breast_cancer</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">roc_curve</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="c1"># Determines how many columns should be displayed on the output data</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">max_columns</span> <span class="o">=</span> <span class="mi">30</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Load the dataset, which comes with Scikit Learn and explore information about the data</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">breast_cancer_dataset</span> <span class="o">=</span> <span class="n">load_breast_cancer</span><span class="p">()</span>
+<span class="n">breast_cancer</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">breast_cancer_dataset</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">breast_cancer_dataset</span><span class="o">.</span><span class="n">feature_names</span><span class="p">)</span>
+<span class="n">breast_cancer</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">breast_cancer_dataset</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span>
+
+<span class="c1"># Give a detailed description of the dataset</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">breast_cancer_dataset</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">breast_cancer_dataset</span><span class="p">[</span><span class="s1">&#39;DESCR&#39;</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>dict_keys([&#39;data&#39;, &#39;target&#39;, &#39;frame&#39;, &#39;target_names&#39;, &#39;DESCR&#39;, &#39;feature_names&#39;, &#39;filename&#39;])
+.. _breast_cancer_dataset:
+
+Breast cancer wisconsin (diagnostic) dataset
+--------------------------------------------
+
+**Data Set Characteristics:**
+
+    :Number of Instances: 569
+
+    :Number of Attributes: 30 numeric, predictive attributes and the class
+
+    :Attribute Information:
+        - radius (mean of distances from center to points on the perimeter)
+        - texture (standard deviation of gray-scale values)
+        - perimeter
+        - area
+        - smoothness (local variation in radius lengths)
+        - compactness (perimeter^2 / area - 1.0)
+        - concavity (severity of concave portions of the contour)
+        - concave points (number of concave portions of the contour)
+        - symmetry
+        - fractal dimension (&#34;coastline approximation&#34; - 1)
+
+        The mean, standard error, and &#34;worst&#34; or largest (mean of the three
+        worst/largest values) of these features were computed for each image,
+        resulting in 30 features.  For instance, field 0 is Mean Radius, field
+        10 is Radius SE, field 20 is Worst Radius.
+
+        - class:
+                - WDBC-Malignant
+                - WDBC-Benign
+
+    :Summary Statistics:
+
+    ===================================== ====== ======
+                                           Min    Max
+    ===================================== ====== ======
+    radius (mean):                        6.981  28.11
+    texture (mean):                       9.71   39.28
+    perimeter (mean):                     43.79  188.5
+    area (mean):                          143.5  2501.0
+    smoothness (mean):                    0.053  0.163
+    compactness (mean):                   0.019  0.345
+    concavity (mean):                     0.0    0.427
+    concave points (mean):                0.0    0.201
+    symmetry (mean):                      0.106  0.304
+    fractal dimension (mean):             0.05   0.097
+    radius (standard error):              0.112  2.873
+    texture (standard error):             0.36   4.885
+    perimeter (standard error):           0.757  21.98
+    area (standard error):                6.802  542.2
+    smoothness (standard error):          0.002  0.031
+    compactness (standard error):         0.002  0.135
+    concavity (standard error):           0.0    0.396
+    concave points (standard error):      0.0    0.053
+    symmetry (standard error):            0.008  0.079
+    fractal dimension (standard error):   0.001  0.03
+    radius (worst):                       7.93   36.04
+    texture (worst):                      12.02  49.54
+    perimeter (worst):                    50.41  251.2
+    area (worst):                         185.2  4254.0
+    smoothness (worst):                   0.071  0.223
+    compactness (worst):                  0.027  1.058
+    concavity (worst):                    0.0    1.252
+    concave points (worst):               0.0    0.291
+    symmetry (worst):                     0.156  0.664
+    fractal dimension (worst):            0.055  0.208
+    ===================================== ====== ======
+
+    :Missing Attribute Values: None
+
+    :Class Distribution: 212 - Malignant, 357 - Benign
+
+    :Creator:  Dr. William H. Wolberg, W. Nick Street, Olvi L. Mangasarian
+
+    :Donor: Nick Street
+
+    :Date: November, 1995
+
+This is a copy of UCI ML Breast Cancer Wisconsin (Diagnostic) datasets.
+https://goo.gl/U2Uwz2
+
+Features are computed from a digitized image of a fine needle
+aspirate (FNA) of a breast mass.  They describe
+characteristics of the cell nuclei present in the image.
+
+Separating plane described above was obtained using
+Multisurface Method-Tree (MSM-T) [K. P. Bennett, &#34;Decision Tree
+Construction Via Linear Programming.&#34; Proceedings of the 4th
+Midwest Artificial Intelligence and Cognitive Science Society,
+pp. 97-101, 1992], a classification method which uses linear
+programming to construct a decision tree.  Relevant features
+were selected using an exhaustive search in the space of 1-4
+features and 1-3 separating planes.
+
+The actual linear program used to obtain the separating plane
+in the 3-dimensional space is that described in:
+[K. P. Bennett and O. L. Mangasarian: &#34;Robust Linear
+Programming Discrimination of Two Linearly Inseparable Sets&#34;,
+Optimization Methods and Software 1, 1992, 23-34].
+
+This database is also available through the UW CS ftp server:
+
+ftp ftp.cs.wisc.edu
+cd math-prog/cpo-dataset/machine-learn/WDBC/
+
+.. topic:: References
+
+   - W.N. Street, W.H. Wolberg and O.L. Mangasarian. Nuclear feature extraction 
+     for breast tumor diagnosis. IS&amp;T/SPIE 1993 International Symposium on 
+     Electronic Imaging: Science and Technology, volume 1905, pages 861-870,
+     San Jose, CA, 1993.
+   - O.L. Mangasarian, W.N. Street and W.H. Wolberg. Breast cancer diagnosis and 
+     prognosis via linear programming. Operations Research, 43(4), pages 570-577, 
+     July-August 1995.
+   - W.H. Wolberg, W.N. Street, and O.L. Mangasarian. Machine learning techniques
+     to diagnose breast cancer from fine-needle aspirates. Cancer Letters 77 (1994) 
+     163-171.
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In order to know what the target set represents, output is -&gt; ['malignant' 'benign'] showing that a 0=&gt;malignant and 1=&gt;benign</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">breast_cancer_dataset</span><span class="p">[</span><span class="s1">&#39;target_names&#39;</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[&#39;malignant&#39; &#39;benign&#39;]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Exploration of features..</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">breast_cancer</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>mean radius</th>
+      <th>mean texture</th>
+      <th>mean perimeter</th>
+      <th>mean area</th>
+      <th>mean smoothness</th>
+      <th>mean compactness</th>
+      <th>mean concavity</th>
+      <th>mean concave points</th>
+      <th>mean symmetry</th>
+      <th>mean fractal dimension</th>
+      <th>radius error</th>
+      <th>texture error</th>
+      <th>perimeter error</th>
+      <th>area error</th>
+      <th>smoothness error</th>
+      <th>...</th>
+      <th>concavity error</th>
+      <th>concave points error</th>
+      <th>symmetry error</th>
+      <th>fractal dimension error</th>
+      <th>worst radius</th>
+      <th>worst texture</th>
+      <th>worst perimeter</th>
+      <th>worst area</th>
+      <th>worst smoothness</th>
+      <th>worst compactness</th>
+      <th>worst concavity</th>
+      <th>worst concave points</th>
+      <th>worst symmetry</th>
+      <th>worst fractal dimension</th>
+      <th>result</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>569.000000</td>
+      <td>569.000000</td>
+      <td>569.000000</td>
+      <td>569.000000</td>
+      <td>569.000000</td>
+      <td>569.000000</td>
+      <td>569.000000</td>
+      <td>569.000000</td>
+      <td>569.000000</td>
+      <td>569.000000</td>
+      <td>569.000000</td>
+      <td>569.000000</td>
+      <td>569.000000</td>
+      <td>569.000000</td>
+      <td>569.000000</td>
+      <td>...</td>
+      <td>569.000000</td>
+      <td>569.000000</td>
+      <td>569.000000</td>
+      <td>569.000000</td>
+      <td>569.000000</td>
+      <td>569.000000</td>
+      <td>569.000000</td>
+      <td>569.000000</td>
+      <td>569.000000</td>
+      <td>569.000000</td>
+      <td>569.000000</td>
+      <td>569.000000</td>
+      <td>569.000000</td>
+      <td>569.000000</td>
+      <td>569.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>14.127292</td>
+      <td>19.289649</td>
+      <td>91.969033</td>
+      <td>654.889104</td>
+      <td>0.096360</td>
+      <td>0.104341</td>
+      <td>0.088799</td>
+      <td>0.048919</td>
+      <td>0.181162</td>
+      <td>0.062798</td>
+      <td>0.405172</td>
+      <td>1.216853</td>
+      <td>2.866059</td>
+      <td>40.337079</td>
+      <td>0.007041</td>
+      <td>...</td>
+      <td>0.031894</td>
+      <td>0.011796</td>
+      <td>0.020542</td>
+      <td>0.003795</td>
+      <td>16.269190</td>
+      <td>25.677223</td>
+      <td>107.261213</td>
+      <td>880.583128</td>
+      <td>0.132369</td>
+      <td>0.254265</td>
+      <td>0.272188</td>
+      <td>0.114606</td>
+      <td>0.290076</td>
+      <td>0.083946</td>
+      <td>0.627417</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>3.524049</td>
+      <td>4.301036</td>
+      <td>24.298981</td>
+      <td>351.914129</td>
+      <td>0.014064</td>
+      <td>0.052813</td>
+      <td>0.079720</td>
+      <td>0.038803</td>
+      <td>0.027414</td>
+      <td>0.007060</td>
+      <td>0.277313</td>
+      <td>0.551648</td>
+      <td>2.021855</td>
+      <td>45.491006</td>
+      <td>0.003003</td>
+      <td>...</td>
+      <td>0.030186</td>
+      <td>0.006170</td>
+      <td>0.008266</td>
+      <td>0.002646</td>
+      <td>4.833242</td>
+      <td>6.146258</td>
+      <td>33.602542</td>
+      <td>569.356993</td>
+      <td>0.022832</td>
+      <td>0.157336</td>
+      <td>0.208624</td>
+      <td>0.065732</td>
+      <td>0.061867</td>
+      <td>0.018061</td>
+      <td>0.483918</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>6.981000</td>
+      <td>9.710000</td>
+      <td>43.790000</td>
+      <td>143.500000</td>
+      <td>0.052630</td>
+      <td>0.019380</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.106000</td>
+      <td>0.049960</td>
+      <td>0.111500</td>
+      <td>0.360200</td>
+      <td>0.757000</td>
+      <td>6.802000</td>
+      <td>0.001713</td>
+      <td>...</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.007882</td>
+      <td>0.000895</td>
+      <td>7.930000</td>
+      <td>12.020000</td>
+      <td>50.410000</td>
+      <td>185.200000</td>
+      <td>0.071170</td>
+      <td>0.027290</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.156500</td>
+      <td>0.055040</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>11.700000</td>
+      <td>16.170000</td>
+      <td>75.170000</td>
+      <td>420.300000</td>
+      <td>0.086370</td>
+      <td>0.064920</td>
+      <td>0.029560</td>
+      <td>0.020310</td>
+      <td>0.161900</td>
+      <td>0.057700</td>
+      <td>0.232400</td>
+      <td>0.833900</td>
+      <td>1.606000</td>
+      <td>17.850000</td>
+      <td>0.005169</td>
+      <td>...</td>
+      <td>0.015090</td>
+      <td>0.007638</td>
+      <td>0.015160</td>
+      <td>0.002248</td>
+      <td>13.010000</td>
+      <td>21.080000</td>
+      <td>84.110000</td>
+      <td>515.300000</td>
+      <td>0.116600</td>
+      <td>0.147200</td>
+      <td>0.114500</td>
+      <td>0.064930</td>
+      <td>0.250400</td>
+      <td>0.071460</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>13.370000</td>
+      <td>18.840000</td>
+      <td>86.240000</td>
+      <td>551.100000</td>
+      <td>0.095870</td>
+      <td>0.092630</td>
+      <td>0.061540</td>
+      <td>0.033500</td>
+      <td>0.179200</td>
+      <td>0.061540</td>
+      <td>0.324200</td>
+      <td>1.108000</td>
+      <td>2.287000</td>
+      <td>24.530000</td>
+      <td>0.006380</td>
+      <td>...</td>
+      <td>0.025890</td>
+      <td>0.010930</td>
+      <td>0.018730</td>
+      <td>0.003187</td>
+      <td>14.970000</td>
+      <td>25.410000</td>
+      <td>97.660000</td>
+      <td>686.500000</td>
+      <td>0.131300</td>
+      <td>0.211900</td>
+      <td>0.226700</td>
+      <td>0.099930</td>
+      <td>0.282200</td>
+      <td>0.080040</td>
+      <td>1.000000</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>15.780000</td>
+      <td>21.800000</td>
+      <td>104.100000</td>
+      <td>782.700000</td>
+      <td>0.105300</td>
+      <td>0.130400</td>
+      <td>0.130700</td>
+      <td>0.074000</td>
+      <td>0.195700</td>
+      <td>0.066120</td>
+      <td>0.478900</td>
+      <td>1.474000</td>
+      <td>3.357000</td>
+      <td>45.190000</td>
+      <td>0.008146</td>
+      <td>...</td>
+      <td>0.042050</td>
+      <td>0.014710</td>
+      <td>0.023480</td>
+      <td>0.004558</td>
+      <td>18.790000</td>
+      <td>29.720000</td>
+      <td>125.400000</td>
+      <td>1084.000000</td>
+      <td>0.146000</td>
+      <td>0.339100</td>
+      <td>0.382900</td>
+      <td>0.161400</td>
+      <td>0.317900</td>
+      <td>0.092080</td>
+      <td>1.000000</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>28.110000</td>
+      <td>39.280000</td>
+      <td>188.500000</td>
+      <td>2501.000000</td>
+      <td>0.163400</td>
+      <td>0.345400</td>
+      <td>0.426800</td>
+      <td>0.201200</td>
+      <td>0.304000</td>
+      <td>0.097440</td>
+      <td>2.873000</td>
+      <td>4.885000</td>
+      <td>21.980000</td>
+      <td>542.200000</td>
+      <td>0.031130</td>
+      <td>...</td>
+      <td>0.396000</td>
+      <td>0.052790</td>
+      <td>0.078950</td>
+      <td>0.029840</td>
+      <td>36.040000</td>
+      <td>49.540000</td>
+      <td>251.200000</td>
+      <td>4254.000000</td>
+      <td>0.222600</td>
+      <td>1.058000</td>
+      <td>1.252000</td>
+      <td>0.291000</td>
+      <td>0.663800</td>
+      <td>0.207500</td>
+      <td>1.000000</td>
+    </tr>
+  </tbody>
+</table>
+<p>8 rows × 31 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">breast_cancer</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+RangeIndex: 569 entries, 0 to 568
+Data columns (total 31 columns):
+ #   Column                   Non-Null Count  Dtype  
+---  ------                   --------------  -----  
+ 0   mean radius              569 non-null    float64
+ 1   mean texture             569 non-null    float64
+ 2   mean perimeter           569 non-null    float64
+ 3   mean area                569 non-null    float64
+ 4   mean smoothness          569 non-null    float64
+ 5   mean compactness         569 non-null    float64
+ 6   mean concavity           569 non-null    float64
+ 7   mean concave points      569 non-null    float64
+ 8   mean symmetry            569 non-null    float64
+ 9   mean fractal dimension   569 non-null    float64
+ 10  radius error             569 non-null    float64
+ 11  texture error            569 non-null    float64
+ 12  perimeter error          569 non-null    float64
+ 13  area error               569 non-null    float64
+ 14  smoothness error         569 non-null    float64
+ 15  compactness error        569 non-null    float64
+ 16  concavity error          569 non-null    float64
+ 17  concave points error     569 non-null    float64
+ 18  symmetry error           569 non-null    float64
+ 19  fractal dimension error  569 non-null    float64
+ 20  worst radius             569 non-null    float64
+ 21  worst texture            569 non-null    float64
+ 22  worst perimeter          569 non-null    float64
+ 23  worst area               569 non-null    float64
+ 24  worst smoothness         569 non-null    float64
+ 25  worst compactness        569 non-null    float64
+ 26  worst concavity          569 non-null    float64
+ 27  worst concave points     569 non-null    float64
+ 28  worst symmetry           569 non-null    float64
+ 29  worst fractal dimension  569 non-null    float64
+ 30  result                   569 non-null    int32  
+dtypes: float64(30), int32(1)
+memory usage: 135.7 KB
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The dataset does not include any null or missing values so there won't be any need for data wrangling (dealing with missing values).</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">breast_cancer</span><span class="o">.</span><span class="n">values</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">breast_cancer</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>It is also possible to instantiate X and y without .values  (.values changes the Dataframe to a numpy array)</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>For good training and testing the dataset, we should split our data. We are going to split our data into 70% training size and 30% test size. It's more convenient to test our dataset with the small portion of the dataset, but it shouldn't be too small.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="s1">&#39;liblinear&#39;</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>LogisticRegression(solver=&#39;liblinear&#39;)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>If we try to fit using the default solver, we get a convergence warning meaning the model needs more time to find the optimal solution, This can be solved by using a different solver. In this instance we shall use the 'liblinear' solver.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">y_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span><span class="p">,</span> <span class="n">precision_score</span><span class="p">,</span> <span class="n">recall_score</span><span class="p">,</span> <span class="n">f1_score</span>
+
+<span class="c1"># each function takes two 1-dimensional numpy arrays: the true values and the predicted values of the target</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;accuracy: &quot;</span><span class="p">,</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;precision: &quot;</span><span class="p">,</span> <span class="n">precision_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;recall: &quot;</span><span class="p">,</span> <span class="n">recall_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;f1_score: &quot;</span><span class="p">,</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">))</span>
+
+<span class="c1"># using scikit-learn we are able to get the four values in the confusion matrix</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">confusion_matrix</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>accuracy:  0.9624060150375939
+precision:  0.95703125
+recall:  0.9839357429718876
+f1_score:  0.9702970297029703
+[[139  11]
+ [  4 245]]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>All of the metric calculations show good scores which means that our Logistic Regression model is good</p>
+
+<pre><code>        # USING ROC CURVE #
+</code></pre>
+<p>An ROC curve (receiver operating characteristic curve) is a graph showing the performance of a classification model at all classification thresholds. The ROC curve is a graph of the specificity vs sensitivity i.e specificity is the % actual negatives correctly predicted and sensitivity being the % actual positives correctly predicted.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">y_pred_proba</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">,</span> <span class="n">thresholds</span> <span class="o">=</span> <span class="n">roc_curve</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred_proba</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="c1"># plt.xlim(0.0, 1.0)</span>
+<span class="c1"># plt.ylim(0.0, 1.0)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;1 - specificity&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;sensitivity&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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" />
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+</div>
+
+
+
+  </div><a class="u-url" href="/leonardblog/2021/07/01/Logistic-Regression-using-Breast-Cancer-dataset.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/leonardblog/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/leonardblog/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/leonardblog/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>An easy to use blogging platform with support for Jupyter Notebooks.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/leonardmutambanengwe" target="_blank" title="leonardmutambanengwe"><svg class="svg-icon grey"><use xlink:href="/leonardblog/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/LeoLENNY1" target="_blank" title="LeoLENNY1"><svg class="svg-icon grey"><use xlink:href="/leonardblog/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
