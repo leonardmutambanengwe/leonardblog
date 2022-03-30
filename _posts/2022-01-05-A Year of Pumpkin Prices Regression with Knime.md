@@ -8,7 +8,7 @@ KNIME Analytics is a low code platform for analytics, in which visual programmin
 The dataset is actually made up of multiple datasets, each for a separate city. Using the **CSV Reader** node, all 13 files could be read at once. However, because some of the files had more columns, an option to catch the error had to be relaxed.
 The columns are as below:
 
-<img src="https://github.com/leonardmutambanengwe/leonardblog/blob/master/images/knime1/columns.jpg"> 
+![](./images/knime1/columns.jpg)
 
 The last 4, are not in most of the other csv files, and so had to be removed using the **Column Filter** node. Other columns with no valuable information were also removed, as well acolumnss those with over 40% missing values with **Missing Value Column Filter** node. 
 
